@@ -11,11 +11,11 @@ function init()
 end
 
 function step()
-    local sqrtR = math.sqrt(self.r)
     local direction_count = 16
     local food_range = 1000
-    local food_close = sqrtR * 100
-    local emergency_distance = 50 + sqrtR
+    local food_close = math.sqrt(self.r) * 100
+    local emergency_distance = 50 + self.r
+    local super_emergency_distance = 10 + self.r
     
     --try not to die
     local emergency = nil
@@ -29,13 +29,20 @@ function step()
 	end
 	
 	if emergency then
-	    return emergency.d + math.pi, false
+	    return emergency.d + 5 * math.pi / 8, false
 	end
     
     
+
+    --make sure we don't process too many food items and time out
+    local nearbyFood = findFood(food_range, 0)
+    if #nearbyFood > 100 then
+        nearbyFood = findFood(food_range / 10, 0)
+    end
+
     --calculate direction with most food
     local directions = {}
-    for i, food in findFood(food_range, 0):pairs() do
+    for i, food in nearbyFood:pairs() do
         local index = math.floor(food.d * direction_count)
         local score = math.max(1, food_close / food.dist) * food.v
         
