@@ -69,7 +69,7 @@ function step()
         end
     end
     
-    if not targetInRange then
+    if not targetInRange or closestNode.r < MIN_TARGET_R then
         target = nil
         
         local closest = {dist = 101, d = 0}
@@ -86,4 +86,5 @@ function step()
         return closestNode.d + avoidDirection, true
     end
 end
+
 
