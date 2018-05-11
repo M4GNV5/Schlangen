@@ -79,7 +79,7 @@ function step()
             end
         end
         
-        return closest.d, true
+        return closest.d, (self.r > MIN_TARGET_R - 1)
     elseif maxAngle - minAngle <= ATTACK_ANGLE_DIFF or closestNode.dist - self.r - closestNode.r >= MAX_DISTANCE then
         return closestNode.d, true
     else
