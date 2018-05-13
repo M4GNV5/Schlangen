@@ -5,6 +5,8 @@ local DANGER_DISTANCE = 10
 local ATTACK_ANGLE_DIFF = math.pi / 6
 local avoidDirection = 0
 
+local ignore = "M4GNV5"
+
 function init()
     math.randomseed(self.id)
     if math.random(0, 1) == 0 then
@@ -28,11 +30,11 @@ function step()
     --avoid dangers and find a target if we have none yet
     local closest = nil
     local closestDistance = nil
-    for i, enemy in enemies:pairs() do
+    for i, enemy in pairs(enemies) do
         local distance = enemy.dist - enemy.r - self.r
         if target and enemy.bot == target then
             --nothing
-        elseif enemy.r > MIN_TARGET_R and (not target or enemy.bot == target) then
+        elseif enemy.r > MIN_TARGET_R and (not target or enemy.bot == target) and enemy.bot_name ~= ignore then
             log("got a new target: " .. tostring(enemy.bot))
             target = enemy.bot
         elseif distance < DANGER_DISTANCE then
@@ -52,7 +54,7 @@ function step()
     local closestNode = {dist = MAX_INT, d = 0}
     local minAngle = 2 * math.pi
     local maxAngle = 0
-    for i, node in enemies:pairs() do
+    for i, node in pairs(enemies) do
         if node.bot == target then
             targetInRange = true
             
@@ -73,7 +75,7 @@ function step()
         target = nil
         
         local closest = {dist = 101, d = 0}
-        for i, food in findFood(100, 1):pairs() do
+        for i, food in pairs(findFood(100, 1)) do
             if math.abs(food.d) < 1 and closest.dist > food.dist then
                 closest = food
             end
@@ -86,5 +88,3 @@ function step()
         return closestNode.d + avoidDirection, true
     end
 end
-
-
