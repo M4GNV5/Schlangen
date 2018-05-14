@@ -49,7 +49,17 @@ function step()
         return lastD, true
     end
     
+    --iterate over all near segments to check if we see the head
     --
+    --when the snake is sideways to us it looks like this:
+    -- OOOOOOOOO
+    -- \      /
+    --    us
+    --when we are at the head of the snake it looks like this:
+    -- OOOOOOOOOOOOO > us
+    --
+    --so in order to detect if we are at the head of the snake we just have to look at difference of
+    --  the leftmost and the rightmost angle. When it's below a certain threshhold we attack!
     local targetInRange = false
     local closestNode = {dist = MAX_INT, d = 0}
     local minAngle = 2 * math.pi
